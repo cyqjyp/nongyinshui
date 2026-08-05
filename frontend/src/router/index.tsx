@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createHashRouter, Navigate } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import DashboardPage from '../pages/Dashboard';
 import InfrastructurePage from '../pages/Infrastructure';
@@ -8,7 +8,7 @@ import RepairPage from '../pages/Repair';
 import ReportsPage from '../pages/Reports';
 import SmartVillagePage from '../pages/SmartVillage';
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/',
     element: <MainLayout />,
