@@ -141,7 +141,7 @@ function computeQualityDrillDownByDays(days: number): Array<{
           } else {
             onlineUnqualified++;
             // 统计主要超标指标
-            if (record.turbidity > record.turbidityStandard) turbidityIssues++;
+            if (record.turbidity > record.turbidityStandard[1]) turbidityIssues++;
             if (record.residualChlorine < record.chlorineStandard[0] || record.residualChlorine > record.chlorineStandard[1]) chlorineIssues++;
             if (record.ph < record.phStandard[0] || record.ph > record.phStandard[1]) phIssues++;
           }

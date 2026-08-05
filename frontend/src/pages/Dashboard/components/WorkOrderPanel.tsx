@@ -26,7 +26,7 @@ function safeCount(value: number) {
   return Number.isFinite(value) ? Math.max(0, value) : 0;
 }
 
-export default function WorkOrderPanel({ data, dataByRange }: WorkOrderPanelProps) {
+export default function WorkOrderPanel({ dataByRange }: WorkOrderPanelProps) {
   const [range, setRange] = useState<RangeKey>('week');
 
   const current = dataByRange[range];

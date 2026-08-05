@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Tabs, Table, Tag, Button, DatePicker, Input, message } from 'antd';
-import { ArrowLeftOutlined, EditOutlined, PlusOutlined, RightOutlined, ReloadOutlined, DownOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import type { Dayjs } from 'dayjs';
+import { ArrowLeftOutlined, EditOutlined, PlusOutlined, RightOutlined, DownOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
 import SectionTitle from '../../components/common/SectionTitle';
 import StatusPill from '../../components/common/StatusPill';
 import WaterPointFormModal from './WaterPointFormModal';
@@ -77,7 +78,7 @@ export default function InfrastructurePage() {
   );
 
   // 水质记录筛选状态
-  const [wqDateRange, setWqDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [wqDateRange, setWqDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [wqConclusions, setWqConclusions] = useState<string[]>([]);
   const [wqWaterPoints, setWqWaterPoints] = useState<string[]>([]);
   const [wqInstitutions, setWqInstitutions] = useState<string[]>([]);
@@ -105,8 +106,8 @@ export default function InfrastructurePage() {
       // 日期范围筛选
       if (wqDateRange[0] && wqDateRange[1]) {
         const recordDate = new Date(record.testDate).getTime();
-        const startDate = wqDateRange[0].getTime();
-        const endDate = wqDateRange[1].getTime();
+        const startDate = wqDateRange[0].valueOf();
+        const endDate = wqDateRange[1].valueOf();
         if (recordDate < startDate || recordDate > endDate) return false;
       }
 
@@ -193,7 +194,7 @@ export default function InfrastructurePage() {
   }, [filterPanelOpen]);
 
   // 巡检工单筛选状态
-  const [inspDateRange, setInspDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [inspDateRange, setInspDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [inspWaterPoints, setInspWaterPoints] = useState<string[]>([]);
   const [inspResults, setInspResults] = useState<string[]>([]);
   const [tempInspWaterPoints, setTempInspWaterPoints] = useState<string[]>([]);
@@ -208,7 +209,7 @@ export default function InfrastructurePage() {
     return villageInspections.filter((record) => {
       if (inspDateRange[0] && inspDateRange[1]) {
         const recordDate = new Date(record.inspectedAt).getTime();
-        if (recordDate < inspDateRange[0].getTime() || recordDate > inspDateRange[1].getTime()) return false;
+        if (recordDate < inspDateRange[0].valueOf() || recordDate > inspDateRange[1].valueOf()) return false;
       }
       if (inspWaterPoints.length > 0 && !inspWaterPoints.includes(record.waterPointId)) return false;
       if (inspResults.length > 0 && !inspResults.includes(record.result)) return false;
@@ -274,15 +275,6 @@ export default function InfrastructurePage() {
         m.householdName.toLowerCase().includes(keyword),
     );
   }, [villageWaterMeters, meterSearchText]);
-
-  // 切换标签选中状态
-  const toggleTag = (value: string, selected: string[], setSelected: (v: string[]) => void) => {
-    if (selected.includes(value)) {
-      setSelected(selected.filter((v) => v !== value));
-    } else {
-      setSelected([...selected, value]);
-    }
-  };
 
   if (villageId && villages.length > 0 && !selectedVillage) {
     return (
@@ -466,7 +458,7 @@ export default function InfrastructurePage() {
                         <span className="infra-wq-filter-label">检测日期：</span>
                         <DatePicker.RangePicker
                           value={wqDateRange}
-                          onChange={(dates) => setWqDateRange(dates as [Date | null, Date | null])}
+                          onChange={(dates) => setWqDateRange(dates as [Dayjs | null, Dayjs | null])}
                           style={{ width: 260 }}
                           placeholder={['开始日期', '结束日期']}
                         />
@@ -618,7 +610,7 @@ export default function InfrastructurePage() {
                         <span className="infra-wq-filter-label">巡检时间：</span>
                         <DatePicker.RangePicker
                           value={inspDateRange}
-                          onChange={(dates) => setInspDateRange(dates as [Date | null, Date | null])}
+                          onChange={(dates) => setInspDateRange(dates as [Dayjs | null, Dayjs | null])}
                           style={{ width: 260 }}
                           placeholder={['开始日期', '结束日期']}
                         />

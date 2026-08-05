@@ -6,9 +6,9 @@ const CHLORINE_STANDARD: [number, number] = [0.05, 4];
 const PH_STANDARD: [number, number] = [6.5, 8.5];
 
 // 水源地标准 (GB 3838-2002 地表水 III 类)
-const AMMONIA_NITROGEN_STANDARD: [number, number] = [0, 1.0]; // mg/L
-const TP_STANDARD: [number, number] = [0, 0.2]; // mg/L
-const DISSOLVED_OXYGEN_STANDARD: [number, number] = [5, 100]; // mg/L
+export const AMMONIA_NITROGEN_STANDARD: [number, number] = [0, 1.0]; // mg/L
+export const TP_STANDARD: [number, number] = [0, 0.2]; // mg/L
+export const DISSOLVED_OXYGEN_STANDARD: [number, number] = [5, 100]; // mg/L
 
 function isQualified(turbidity: number, chlorine: number, ph: number): boolean {
   return (

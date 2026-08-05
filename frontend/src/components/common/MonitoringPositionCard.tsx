@@ -13,7 +13,6 @@ export interface MonitoringPositionCardProps {
 
 function MetricItem({
   metric,
-  position,
   onTrendClick,
 }: {
   metric: SourceWaterMetric | FinishedWaterMetric;

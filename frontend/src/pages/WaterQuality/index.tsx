@@ -10,11 +10,7 @@ import {
   ClockCircleOutlined,
   SafetyCertificateOutlined,
   ThunderboltOutlined,
-  EnvironmentOutlined,
-  SafetyOutlined,
-  NodeIndexOutlined,
 } from '@ant-design/icons';
-import dayjs from 'dayjs';
 import SectionTitle from '../../components/common/SectionTitle';
 import MonitoringPositionCard from '../../components/common/MonitoringPositionCard';
 import LabRecordFormModal from './LabRecordFormModal';
@@ -32,7 +28,7 @@ import './WaterQuality.css';
 export default function WaterQualityPage() {
   const [waterPoints, setWaterPoints] = useState<WaterPoint[]>([]);
   const [selectedId, setSelectedId] = useState<string>('');
-  const [onlineSeries, setOnlineSeries] = useState<OnlineWaterQualityRecord[]>([]);
+  const [, setOnlineSeries] = useState<OnlineWaterQualityRecord[]>([]);
   const [labRecords, setLabRecords] = useState<LabWaterQualityRecord[]>([]);
   const [alerts, setAlerts] = useState<AlertEvent[]>([]);
   const [labModalOpen, setLabModalOpen] = useState(false);
@@ -63,12 +59,6 @@ export default function WaterQualityPage() {
   };
 
   const selectedPoint = waterPoints.find((wp) => wp.id === selectedId);
-
-  const positionIcons: Record<string, React.ReactNode> = {
-    source: <EnvironmentOutlined />,
-    finished: <SafetyOutlined />,
-    terminal: <NodeIndexOutlined />,
-  };
 
   const tabItems = [
     {
@@ -254,15 +244,13 @@ interface LabMonitoringTabProps {
 function LabMonitoringTab({
   waterPoints,
   selectedId,
-  setSelectedId,
+  setSelectedId: _setSelectedId,
   labRecords,
   alerts,
   setLabModalOpen,
-  reload,
-  handleMarkHandled,
+  reload: _reload,
+  handleMarkHandled: _handleMarkHandled,
 }: LabMonitoringTabProps) {
-  const selectedPoint = waterPoints.find((wp) => wp.id === selectedId);
-
   const stats = useMemo(() => {
     const total = labRecords.length;
     const qualified = labRecords.filter((r) => r.conclusion === '合格').length;
