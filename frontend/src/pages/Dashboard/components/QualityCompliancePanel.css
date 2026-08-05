@@ -1,0 +1,12 @@
+.quality-range-segmented {
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.quality-range-segmented .ant-segmented {
+  font-size: 12px;
+}
+
+.quality-range-segmented .ant-segmented-item {
+  padding: 0 8px;
+}

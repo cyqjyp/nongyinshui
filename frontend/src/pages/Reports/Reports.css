@@ -1,0 +1,39 @@
+.reports-toolbar {
+  padding: var(--spacing-internal-padding);
+  margin-bottom: var(--spacing-widget-gap);
+}
+
+.reports-preview {
+  padding: var(--spacing-internal-padding);
+}
+
+.reports-preview-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.reports-preview-header > span:first-child {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+@media print {
+  .app-sider,
+  .app-header,
+  .reports-toolbar {
+    display: none !important;
+  }
+  .app-content {
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+  #report-print-area {
+    background: #fff !important;
+    color: #000 !important;
+    border: none !important;
+  }
+}

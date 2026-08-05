@@ -1,0 +1,25 @@
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--spacing-widget-gap);
+}
+
+.section-title-bar {
+  width: 4px;
+  height: 16px;
+  background: var(--color-chart-cyan);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 6px rgba(0, 219, 231, 0.7);
+}
+
+.section-title-text {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.section-title-extra {
+  margin-left: auto;
+}

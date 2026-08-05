@@ -1,0 +1,45 @@
+.metric-trend-modal .ant-modal-content {
+  background: rgba(13, 20, 35, 0.98);
+  border: 1px solid rgba(0, 242, 255, 0.15);
+  border-radius: 8px;
+}
+
+.metric-trend-modal .ant-modal-header {
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.metric-trend-modal .ant-modal-title {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 15px;
+}
+
+.metric-trend-modal .ant-modal-close {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.metric-trend-modal .ant-modal-body {
+  padding: 20px 24px 24px;
+}
+
+.mtm-info-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: rgba(0, 242, 255, 0.05);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 242, 255, 0.1);
+}
+
+.mtm-limit-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mtm-limit-value {
+  font-size: 13px;
+  color: #00f2ff;
+  font-family: 'JetBrains Mono', monospace;
+}

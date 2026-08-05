@@ -1,0 +1,40 @@
+.ph-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ph-meter-track {
+  position: relative;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-container-high);
+}
+
+.ph-meter-safe-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 219, 231, 0.18);
+  border-radius: var(--radius-full);
+}
+
+.ph-meter-pointer {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ph-meter-scale {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ph-meter-value {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}

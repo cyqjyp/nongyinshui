@@ -1,0 +1,520 @@
+.smart-village-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-widget-gap);
+  min-height: calc(100vh - 112px);
+}
+
+.smart-village-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.smart-village-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(360px, 1fr) auto;
+  gap: var(--spacing-widget-gap);
+  flex: 1;
+  min-height: 0;
+}
+
+@media (min-width: 1200px) {
+  .smart-village-grid {
+    grid-template-rows: minmax(420px, 1fr) auto;
+  }
+}
+
+.smart-village-top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-widget-gap);
+  min-height: 0;
+}
+
+@media (min-width: 992px) {
+  .smart-village-top {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.smart-village-map {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--color-outline-variant);
+  min-height: 320px;
+}
+
+.smart-village-map img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+}
+
+.smart-village-map-controls {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.smart-village-map-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(22, 30, 45, 0.85);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: var(--radius-default);
+  color: var(--color-on-surface);
+  cursor: pointer;
+}
+
+.smart-village-map-btn:hover {
+  background: rgba(0, 219, 231, 0.15);
+  border-color: rgba(0, 219, 231, 0.4);
+}
+
+.smart-village-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.smart-village-glass {
+  background: rgba(22, 30, 45, 0.8);
+  backdrop-filter: blur(12px);
+  border-left: 2px solid var(--color-surface-tint);
+  border-radius: var(--radius-xl);
+  box-shadow: inset 0 0 10px rgba(0, 219, 231, 0.05);
+}
+
+.smart-village-panel {
+  padding: 12px 14px;
+}
+
+.smart-village-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.smart-village-panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.smart-village-panel-title .anticon {
+  color: #00dbe7;
+}
+
+.smart-village-basic-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px 12px;
+}
+
+.smart-village-basic-item span:first-child {
+  display: block;
+  font-size: 11px;
+  color: var(--color-on-surface-variant);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.smart-village-basic-item span:last-child {
+  font-size: 16px;
+  font-weight: 700;
+  color: #00dbe7;
+  line-height: 1.2;
+}
+
+.smart-village-basic-item small {
+  font-size: 11px;
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+.smart-village-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.smart-village-metric-cell {
+  padding: 8px;
+  background: rgba(36, 42, 53, 0.4);
+  border: 1px solid rgba(58, 73, 75, 0.3);
+  border-radius: var(--radius-default);
+}
+
+.smart-village-metric-cell p:first-child {
+  font-size: 11px;
+  color: var(--color-on-surface-variant);
+  margin: 0 0 4px;
+}
+
+.smart-village-metric-cell .metric-value {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+.smart-village-metric-cell .metric-value.primary {
+  color: #00dbe7;
+}
+
+.smart-village-metric-cell .metric-limit {
+  font-size: 10px;
+  color: var(--color-outline);
+  margin-top: 2px;
+}
+
+.smart-village-status-bar {
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: rgba(0, 255, 65, 0.08);
+  border: 1px solid rgba(0, 255, 65, 0.25);
+  border-radius: var(--radius-default);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--color-status-running);
+}
+
+.smart-village-status-bar.warning {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: var(--color-status-warning);
+}
+
+.smart-village-status-bar.fault {
+  background: rgba(255, 49, 49, 0.1);
+  border-color: rgba(255, 49, 49, 0.35);
+  color: var(--color-status-fault);
+}
+
+.smart-village-bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-widget-gap);
+}
+
+@media (min-width: 992px) {
+  .smart-village-bottom {
+    grid-template-columns: 5fr 4fr 3fr;
+  }
+}
+
+.smart-village-pump-list {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.smart-village-pump-card {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  background: rgba(36, 42, 53, 0.2);
+  border: 1px solid rgba(58, 73, 75, 0.25);
+  border-radius: var(--radius-lg);
+}
+
+.smart-village-pump-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.smart-village-pump-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 12px;
+}
+
+.smart-village-pump-stats p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-on-surface-variant);
+}
+
+.smart-village-pump-stats .value {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.supply-total-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.supply-trend-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  animation: trend-arrow-blink 1.4s ease-in-out infinite;
+}
+
+.supply-trend-arrow.up {
+  color: var(--color-status-running);
+}
+
+.supply-trend-arrow.down {
+  color: var(--color-status-fault);
+}
+
+.supply-trend-arrow:hover {
+  animation-play-state: paused;
+  transform: scale(1.15);
+}
+
+@keyframes trend-arrow-blink {
+  0%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+  50% {
+    opacity: 0.35;
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+}
+
+.smart-village-supply-popup {
+  position: fixed;
+  z-index: 1000;
+  width: 220px;
+  padding: 10px 12px;
+  background: rgba(8, 14, 24, 0.96);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 219, 231, 0.35);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 20px rgba(0, 219, 231, 0.15);
+}
+
+.smart-village-supply-popup-title {
+  font-size: 13px;
+  color: var(--color-on-surface-variant);
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(58, 73, 75, 0.35);
+}
+
+.smart-village-supply-popup-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--color-on-surface);
+}
+
+.smart-village-supply-popup-row + .smart-village-supply-popup-row {
+  margin-top: 6px;
+}
+
+.smart-village-supply-popup-row span:last-child {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.smart-village-supply-popup-row .positive {
+  color: var(--color-status-running);
+}
+
+.smart-village-supply-popup-row .negative {
+  color: var(--color-status-fault);
+}
+
+.smart-village-quality-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(58, 73, 75, 0.2);
+}
+
+.smart-village-quality-chip {
+  padding: 6px 4px;
+  text-align: center;
+  background: rgba(47, 53, 64, 0.3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-default);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.smart-village-quality-chip:hover {
+  background: rgba(0, 219, 231, 0.12);
+  border-color: rgba(0, 219, 231, 0.35);
+}
+
+.smart-village-valve-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(36, 42, 53, 0.4);
+  border: 1px solid rgba(58, 73, 75, 0.25);
+  border-radius: var(--radius-default);
+}
+
+.smart-village-valve-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--color-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-secondary);
+}
+
+.smart-village-valve-icon.stopped {
+  border-color: var(--color-outline);
+  color: var(--color-outline);
+}
+
+.smart-village-valve-bar {
+  height: 6px;
+  background: rgba(58, 73, 75, 0.3);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.smart-village-valve-bar-fill {
+  height: 100%;
+  background: var(--color-secondary);
+  border-radius: var(--radius-full);
+}
+
+.smart-village-alarm-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 260px;
+  z-index: 100;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 49, 49, 0.3);
+  background: rgba(8, 14, 24, 0.92);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.smart-village-alarm-float.collapsed {
+  height: 48px;
+  width: 152px;
+}
+
+.smart-village-alarm-float.collapsed .smart-village-alarm-list {
+  display: none;
+}
+
+.smart-village-alarm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(255, 49, 49, 0.08);
+  border-bottom: 1px solid rgba(58, 73, 75, 0.25);
+}
+
+.smart-village-alarm-list {
+  padding: 8px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.smart-village-alarm-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  margin-bottom: 6px;
+  background: rgba(36, 42, 53, 0.4);
+  border-left: 2px solid var(--color-status-fault);
+  border-radius: var(--radius-default);
+  font-size: 13px;
+}
+
+.smart-village-alarm-item time {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--color-on-surface-variant);
+}
+
+.smart-village-online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-status-running);
+  box-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+}
+
+.smart-village-online-dot.offline {
+  background: var(--color-status-stopped);
+  box-shadow: none;
+}
+
+.smart-village-trend-popup {
+  position: fixed;
+  z-index: 1000;
+  width: 340px;
+  padding: 12px 14px;
+  background: rgba(8, 14, 24, 0.96);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 219, 231, 0.4);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 20px rgba(0, 219, 231, 0.2);
+}
+
+.smart-village-trend-popup-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: #00dbe7;
+}
+
+.smart-village-trend-popup .metric-limit {
+  font-size: 11px;
+  color: var(--color-outline);
+  margin-bottom: 8px;
+}

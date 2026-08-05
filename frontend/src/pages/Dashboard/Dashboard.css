@@ -1,0 +1,124 @@
+.dashboard-loading {
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-error {
+  width: 100%;
+  max-width: 760px;
+  margin: min(18vh, 160px) auto 0;
+}
+
+.dashboard-error .ant-alert {
+  background: rgba(147, 0, 10, 0.18);
+  border-color: rgba(255, 49, 49, 0.4);
+}
+
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  gap: var(--spacing-widget-gap);
+}
+
+.cockpit-main-grid {
+  display: grid;
+  min-width: 0;
+  width: 100%;
+  gap: var(--spacing-widget-gap);
+  grid-template-columns: 280px minmax(520px, 1fr) 300px;
+  grid-template-areas: 'left center right';
+  align-items: start;
+}
+
+.cockpit-column {
+  display: grid;
+  min-width: 0;
+  height: auto;
+  gap: var(--spacing-widget-gap);
+  align-content: start;
+}
+
+.cockpit-left-column,
+.cockpit-right-column {
+  grid-template-rows: repeat(4, auto);
+}
+
+.cockpit-center-column {
+  grid-template-rows: 440px minmax(280px, auto);
+}
+
+.cockpit-left-column {
+  grid-area: left;
+}
+
+.cockpit-center-column {
+  grid-area: center;
+}
+
+.cockpit-right-column {
+  grid-area: right;
+}
+
+.cockpit-main-grid > *,
+.cockpit-column > * {
+  min-width: 0;
+}
+
+@media (min-width: 1360px) and (max-width: 1599px) {
+  .cockpit-main-grid {
+    grid-template-columns: 250px minmax(460px, 1fr) 270px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1359px) {
+  .cockpit-main-grid {
+    grid-template-columns: 210px minmax(460px, 1fr) 220px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .cockpit-main-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'center center'
+      'left right';
+  }
+
+  .cockpit-center-column {
+    grid-template-rows: 380px minmax(240px, auto);
+  }
+}
+
+@media (max-width: 991px) {
+  .cockpit-main-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'center'
+      'left'
+      'right';
+  }
+
+  .cockpit-center-column {
+    grid-template-rows: minmax(320px, auto) minmax(240px, auto);
+  }
+}
+
+@media (max-width: 575px) {
+  .dashboard-error {
+    margin-top: 48px;
+  }
+
+  .dashboard-error .ant-alert {
+    align-items: flex-start;
+  }
+
+  .dashboard-error .ant-alert-action {
+    margin-inline-start: 8px;
+  }
+}

@@ -1,0 +1,106 @@
+/* ── Section Labels ── */
+.wq-section-label {
+  text-transform: uppercase;
+  margin: 4px 0 12px;
+  display: block;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.wq-section-label-spaced {
+  margin-top: 24px;
+}
+
+/* ─ Row Spacing ── */
+.wq-row {
+  margin-top: 16px;
+}
+
+/* ── pH Card ── */
+.wq-ph-card {
+  padding: var(--spacing-internal-padding);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* ── Chart & Table Cards ── */
+.wq-chart-card,
+.wq-table-card {
+  padding: var(--spacing-internal-padding);
+}
+
+.wq-chart-card span {
+  display: block;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+/* ── Empty State ── */
+.wq-empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--color-on-surface-variant);
+}
+
+/* ── Tabs ── */
+.wq-tabs {
+  margin-top: 16px;
+}
+
+.wq-tabs .ant-tabs-tab {
+  font-size: 14px;
+  padding: 12px 20px;
+}
+
+.wq-tabs .ant-tabs-tab .anticon {
+  margin-right: 6px;
+}
+
+.wq-tab-content {
+  padding-top: 8px;
+}
+
+/* ── Stat Cards (实验室监测 Tab) ── */
+.wq-stat-card {
+  background: var(--color-surface-container-low, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--color-outline, rgba(255, 255, 255, 0.08));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+
+.wq-stat-card:hover {
+  border-color: rgba(0, 242, 255, 0.2);
+}
+
+.wq-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wq-stat-icon .anticon {
+  font-size: 22px;
+}
+
+.wq-stat-info {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.wq-stat-info .text-data-display {
+  font-size: 28px;
+  line-height: 1.1;
+}
