@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tag } from 'antd';
-import {
-  WarningOutlined,
-  CheckCircleOutlined,
-  ExclamationCircleOutlined,
-  DollarOutlined,
-  ToolOutlined,
-  PhoneOutlined,
-  HomeOutlined,
-} from '@ant-design/icons';
 import SectionTitle from '../../components/common/SectionTitle';
 import { fetchVillages } from '../../services/waterPointService';
 import { getSmartVillageProfile } from '../../mock/smartVillage';
@@ -128,7 +119,7 @@ export default function SmartVillageOverview() {
 
   return (
     <div style={{ padding: 24, height: 'calc(100vh - 112px)', overflow: 'auto' }}>
-      <SectionTitle icon={<HomeOutlined />} title="智慧村庄" />
+      <SectionTitle title="智慧村庄" />
 
       {/* 统计面板 */}
       <div

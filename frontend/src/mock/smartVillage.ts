@@ -31,7 +31,7 @@ export interface SmartVillageProfile {
     totalSupply: number;
     supplyChange: number;
     supplyChangeRate: number;
-    realtimeQuality?: Array<{ label: string; value: number; unit: string; limit: string }>;
+    realtimeQuality?: Array<{ label: string; value: number; unit: string; limit: string; series?: number[] }>;
   }>;
   liquidLevels: {
     clearPool: { current: number; status: '正常' | '预警' };

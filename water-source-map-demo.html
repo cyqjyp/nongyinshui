@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水源状况地图可视化 - 方案 C</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #0a1628;
+            color: #fff;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        /* 地图区域 */
+        .map-area {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(135deg, #0d1f3c 0%, #1a2d4a 100%);
+        }
+        
+        .map-title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        .map-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #00d4ff;
+            border-radius: 2px;
+        }
+        
+        /* 模拟地图背景 */
+        .map-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+        }
+        
+        /* 水源地标记点 */
+        .water-source-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+        
+        .water-source-marker:hover {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+        
+        .water-source-marker .icon {
+            font-size: 20px;
+        }
+        
+        /* 状态颜色 */
+        .status-normal {
+            background: rgba(0, 200, 83, 0.3);
+            border: 2px solid #00c853;
+            box-shadow: 0 0 15px rgba(0, 200, 83, 0.5);
+        }
+        
+        .status-warning {
+            background: rgba(255, 193, 7, 0.3);
+            border: 2px solid #ffc107;
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+            animation: pulse-warning 2s infinite;
+        }
+        
+        .status-risk {
+            background: rgba(244, 67, 54, 0.3);
+            border: 2px solid #f44336;
+            box-shadow: 0 0 15px rgba(244, 67, 54, 0.5);
+            animation: pulse-risk 1.5s infinite;
+        }
+        
+        @keyframes pulse-warning {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 193, 7, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(255, 193, 7, 0.8); }
+        }
+        
+        @keyframes pulse-risk {
+            0%, 100% { box-shadow: 0 0 15px rgba(244, 67, 54, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(244, 67, 54, 0.8); }
+        }
+        
+        /* 标记点标签 */
+        .marker-label {
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            white-space: nowrap;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+        
+        /* 图例 */
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(13, 31, 60, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 10;
+        }
+        
+        .legend-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #00d4ff;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        
+        .legend-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        /* 右侧统计面板 */
+        .stats-panel {
+            width: 320px;
+            background: rgba(13, 31, 60, 0.95);
+            border-left: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .stats-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stats-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #00d4ff;
+            border-radius: 2px;
+        }
+        
+        /* 统计卡片 */
+        .stat-card {
+            background: rgba(26, 45, 74, 0.6);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            border-color: rgba(0, 212, 255, 0.5);
+            background: rgba(26, 45, 74, 0.8);
+        }
+        
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .stat-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .stat-count {
+            font-size: 20px;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+        
+        .stat-status-row {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+        }
+        
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        
+        .dot-normal { background: #00c853; }
+        .dot-warning { background: #ffc107; }
+        .dot-risk { background: #f44336; }
+        
+        /* 汇总统计 */
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .summary-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(26, 45, 74, 0.6);
+            border-radius: 6px;
+        }
+        
+        .summary-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .summary-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .text-normal { color: #00c853; }
+        .text-warning { color: #ffc107; }
+        .text-risk { color: #f44336; }
+        .text-total { color: #00d4ff; }
+        
+        /* 悬浮提示框 */
+        .tooltip {
+            position: absolute;
+            background: rgba(13, 31, 60, 0.95);
+            border: 1px solid rgba(0, 212, 255, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+            max-width: 200px;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+        }
+        
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #00d4ff;
+        }
+        
+        .tooltip-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        
+        .tooltip-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 地图区域 -->
+        <div class="map-area">
+            <div class="map-title">水源状况分布</div>
+            
+            <!-- 模拟地图背景（用 SVG 绘制简单的地形） -->
+            <svg class="map-bg" viewBox="0 0 800 600">
+                <!-- 河流 -->
+                <path d="M 100 200 Q 200 180 300 220 T 500 200 T 700 250" stroke="#1e3a5f" stroke-width="8" fill="none" opacity="0.5"/>
+                <path d="M 150 300 Q 250 280 350 320 T 550 300" stroke="#1e3a5f" stroke-width="6" fill="none" opacity="0.4"/>
+                
+                <!-- 水库区域 -->
+                <ellipse cx="250" cy="150" rx="60" ry="40" fill="#1e3a5f" opacity="0.4"/>
+                <ellipse cx="500" cy="350" rx="50" ry="35" fill="#1e3a5f" opacity="0.4"/>
+                
+                <!-- 山脉轮廓 -->
+                <path d="M 0 400 L 100 350 L 200 380 L 300 340 L 400 370 L 500 330 L 600 360 L 700 320 L 800 350 L 800 600 L 0 600 Z" fill="#0d1f3c" opacity="0.5"/>
+            </svg>
+            
+            <!-- 水源地标记点 -->
+            <!-- 水库 -->
+            <div class="water-source-marker status-normal" style="top: 130px; left: 230px;" data-type="水库" data-name="青溪水库" data-status="normal">
+                <span class="icon">🏞️</span>
+                <div class="marker-label">青溪水库</div>
+            </div>
+            
+            <div class="water-source-marker status-normal" style="top: 330px; left: 480px;" data-type="水库" data-name="石桥水库" data-status="normal">
+                <span class="icon">🏞️</span>
+                <div class="marker-label">石桥水库</div>
+            </div>
+            
+            <div class="water-source-marker status-warning" style="top: 200px; left: 400px;" data-type="水库" data-name="梅岭水库" data-status="warning">
+                <span class="icon">🏞️</span>
+                <div class="marker-label">梅岭水库</div>
+            </div>
+            
+            <!-- 河流 -->
+            <div class="water-source-marker status-normal" style="top: 200px; left: 280px;" data-type="河流" data-name="龙泉河取水点" data-status="normal">
+                <span class="icon">🌊</span>
+                <div class="marker-label">龙泉河</div>
+            </div>
+            
+            <div class="water-source-marker status-normal" style="top: 280px; left: 520px;" data-type="河流" data-name="青溪河取水点" data-status="normal">
+                <span class="icon">🌊</span>
+                <div class="marker-label">青溪河</div>
+            </div>
+            
+            <!-- 山泉 -->
+            <div class="water-source-marker status-warning" style="top: 100px; left: 150px;" data-type="山泉" data-name="梅岭山泉" data-status="warning">
+                <span class="icon"></span>
+                <div class="marker-label">梅岭山泉</div>
+            </div>
+            
+            <!-- 地下水 -->
+            <div class="water-source-marker status-normal" style="top: 400px; left: 350px;" data-type="地下水" data-name="石桥村地下水" data-status="normal">
+                <span class="icon">💧</span>
+                <div class="marker-label">石桥地下水</div>
+            </div>
+            
+            <div class="water-source-marker status-risk" style="top: 450px; left: 600px;" data-type="地下水" data-name="梅岭村地下水" data-status="risk">
+                <span class="icon">💧</span>
+                <div class="marker-label">梅岭地下水</div>
+            </div>
+            
+            <!-- 引水工程 -->
+            <div class="water-source-marker status-normal" style="top: 380px; left: 200px;" data-type="引水工程" data-name="梅岭引水点" data-status="normal">
+                <span class="icon">🔧</span>
+                <div class="marker-label">梅岭引水点</div>
+            </div>
+            
+            <!-- 图例 -->
+            <div class="legend">
+                <div class="legend-title">水源类型</div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background: rgba(0, 200, 83, 0.3); border: 2px solid #00c853;">🏞️</div>
+                    <span>水库</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background: rgba(0, 200, 83, 0.3); border: 2px solid #00c853;">🌊</div>
+                    <span>河流</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background: rgba(0, 200, 83, 0.3); border: 2px solid #00c853;">⛲</div>
+                    <span>山泉</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background: rgba(0, 200, 83, 0.3); border: 2px solid #00c853;">💧</div>
+                    <span>地下水</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon" style="background: rgba(0, 200, 83, 0.3); border: 2px solid #00c853;"></div>
+                    <span>引水工程</span>
+                </div>
+                
+                <div class="legend-title" style="margin-top: 15px;">状态说明</div>
+                <div class="legend-item">
+                    <div class="legend-icon status-normal"></div>
+                    <span>正常</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon status-warning"></div>
+                    <span>预警</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon status-risk"></div>
+                    <span>风险</span>
+                </div>
+            </div>
+            
+            <!-- 悬浮提示框 -->
+            <div class="tooltip" id="tooltip">
+                <div class="tooltip-title" id="tooltip-title"></div>
+                <div class="tooltip-row">
+                    <span class="tooltip-label">类型：</span>
+                    <span id="tooltip-type"></span>
+                </div>
+                <div class="tooltip-row">
+                    <span class="tooltip-label">状态：</span>
+                    <span id="tooltip-status"></span>
+                </div>
+                <div class="tooltip-row">
+                    <span class="tooltip-label">所属村庄：</span>
+                    <span id="tooltip-village"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右侧统计面板 -->
+        <div class="stats-panel">
+            <div class="stats-title">水源统计</div>
+            
+            <!-- 水库 -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-type">
+                        <span>🏞️</span>
+                        <span>水库</span>
+                    </div>
+                    <div class="stat-count">3 处</div>
+                </div>
+                <div class="stat-status-row">
+                    <div class="status-badge">
+                        <div class="status-dot dot-normal"></div>
+                        <span>正常 2</span>
+                    </div>
+                    <div class="status-badge">
+                        <div class="status-dot dot-warning"></div>
+                        <span>预警 1</span>
+                    </div>
+                    <div class="status-badge">
+                        <div class="status-dot dot-risk"></div>
+                        <span>风险 0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 河流 -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-type">
+                        <span>🌊</span>
+                        <span>河流</span>
+                    </div>
+                    <div class="stat-count">2 处</div>
+                </div>
+                <div class="stat-status-row">
+                    <div class="status-badge">
+                        <div class="status-dot dot-normal"></div>
+                        <span>正常 2</span>
+                    </div>
+                    <div class="status-badge">
+                        <div class="status-dot dot-warning"></div>
+                        <span>预警 0</span>
+                    </div>
+                    <div class="status-badge">
+                        <div class="status-dot dot-risk"></div>
+                        <span>风险 0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 山泉 -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-type">
+                        <span>⛲</span>
+                        <span>山泉</span>
+                    </div>
+                    <div class="stat-count">1 处</div>
+                </div>
+                <div class="stat-status-row">
+                    <div class="status-badge">
+                        <div class="status-dot dot-normal"></div>
+                        <span>正常 0</span>
+                    </div>
+                    <div class="status-badge">
+                        <div class="status-dot dot-warning"></div>
+                        <span>预警 1</span>
+                    </div>
+                    <div class="status-badge">
+                        <div class="status-dot dot-risk"></div>
+                        <span>风险 0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 地下水 -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-type">
+                        <span>💧</span>
+                        <span>地下水</span>
+                    </div>
+                    <div class="stat-count">2 处</div>
+                </div>
+                <div class="stat-status-row">
+                    <div class="status-badge">
+                        <div class="status-dot dot-normal"></div>
+                        <span>正常 1</span>
+                    </div>
+                    <div class="status-badge">
+                        <div class="status-dot dot-warning"></div>
+                        <span>预警 0</span>
+                    </div>
+                    <div class="status-badge">
+                        <div class="status-dot dot-risk"></div>
+                        <span>风险 1</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 引水工程 -->
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <div class="stat-type">
+                        <span>🔧</span>
+                        <span>引水工程</span>
+                    </div>
+                    <div class="stat-count">1 处</div>
+                </div>
+                <div class="stat-status-row">
+                    <div class="status-badge">
+                        <div class="status-dot dot-normal"></div>
+                        <span>正常 1</span>
+                    </div>
+                    <div class="status-badge">
+                        <div class="status-dot dot-warning"></div>
+                        <span>预警 0</span>
+                    </div>
+                    <div class="status-badge">
+                        <div class="status-dot dot-risk"></div>
+                        <span>风险 0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 汇总统计 -->
+            <div class="summary-stats">
+                <div class="summary-item">
+                    <div class="summary-value text-total">9</div>
+                    <div class="summary-label">总计</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value text-normal">6</div>
+                    <div class="summary-label">正常</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value text-warning">2</div>
+                    <div class="summary-label">预警</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-value text-risk">1</div>
+                    <div class="summary-label">风险</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 水源地数据
+        const waterSources = [
+            { name: '青溪水库', type: '水库', status: 'normal', village: '青溪村' },
+            { name: '石桥水库', type: '水库', status: 'normal', village: '石桥村' },
+            { name: '梅岭水库', type: '水库', status: 'warning', village: '梅岭村' },
+            { name: '龙泉河取水点', type: '河流', status: 'normal', village: '龙泉镇' },
+            { name: '青溪河取水点', type: '河流', status: 'normal', village: '青溪村' },
+            { name: '梅岭山泉', type: '山泉', status: 'warning', village: '梅岭村' },
+            { name: '石桥村地下水', type: '地下水', status: 'normal', village: '石桥村' },
+            { name: '梅岭村地下水', type: '地下水', status: 'risk', village: '梅岭村' },
+            { name: '梅岭引水点', type: '引水工程', status: 'normal', village: '梅岭村' },
+        ];
+        
+        const statusText = {
+            normal: '正常',
+            warning: '预警',
+            risk: '风险'
+        };
+        
+        // 标记点悬浮事件
+        const markers = document.querySelectorAll('.water-source-marker');
+        const tooltip = document.getElementById('tooltip');
+        
+        markers.forEach(marker => {
+            marker.addEventListener('mouseenter', (e) => {
+                const name = marker.dataset.name;
+                const type = marker.dataset.type;
+                const status = marker.dataset.status;
+                const source = waterSources.find(s => s.name === name);
+                
+                document.getElementById('tooltip-title').textContent = name;
+                document.getElementById('tooltip-type').textContent = type;
+                document.getElementById('tooltip-status').textContent = statusText[status];
+                document.getElementById('tooltip-status').className = `text-${status}`;
+                document.getElementById('tooltip-village').textContent = source.village;
+                
+                tooltip.classList.add('show');
+            });
+            
+            marker.addEventListener('mousemove', (e) => {
+                tooltip.style.left = (e.pageX + 15) + 'px';
+                tooltip.style.top = (e.pageY + 15) + 'px';
+            });
+            
+            marker.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
+            
+            marker.addEventListener('click', () => {
+                const name = marker.dataset.name;
+                alert(`查看 ${name} 的详细信息`);
+            });
+        });
+        
+        // 统计卡片点击事件
+        const statCards = document.querySelectorAll('.stat-card');
+        statCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const type = card.querySelector('.stat-type span:last-child').textContent;
+                alert(`筛选 ${type} 类型的水源地`);
+            });
+        });
+    </script>
+</body>
+</html>

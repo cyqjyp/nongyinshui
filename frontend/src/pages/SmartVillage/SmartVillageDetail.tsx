@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Tag } from 'antd';
 import {
   InfoCircleOutlined,
@@ -9,15 +9,9 @@ import {
   InboxOutlined,
   WarningOutlined,
   CheckCircleOutlined,
-  PlusOutlined,
-  MinusOutlined,
-  AppstoreOutlined,
   DownOutlined,
-  ArrowLeftOutlined,
 } from '@ant-design/icons';
 import TrendChart from '../../components/common/TrendChart';
-import StatusPill from '../../components/common/StatusPill';
-import SectionTitle from '../../components/common/SectionTitle';
 import SupplyTrendArrow from './SupplyTrendArrow';
 import SupplyFlowMap from './SupplyFlowMap';
 import { fetchVillages } from '../../services/waterPointService';
@@ -57,7 +51,6 @@ function calcPopupPosition(rect: DOMRect, width = 340, height = 260) {
 
 export default function SmartVillageDetail() {
   const { villageId } = useParams<{ villageId: string }>();
-  const navigate = useNavigate();
   const trendPopupRef = useRef<HTMLDivElement>(null);
   const supplyPopupRef = useRef<HTMLDivElement>(null);
   const [villages, setVillages] = useState<Village[]>([]);
