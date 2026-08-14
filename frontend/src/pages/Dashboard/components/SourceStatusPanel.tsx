@@ -1,53 +1,140 @@
+import { useState } from 'react';
 import type { DashboardCockpitData } from '../../../types/dashboard';
+import type { WaterPoint } from '../../../types';
 import DashboardPanel from './DashboardPanel';
+import SourceDrillDownModal from './SourceDrillDownModal';
+import SourceDetailModal from './SourceDetailModal';
+import { waterPoints } from '../../../mock/waterPoints';
 
 export interface SourceStatusPanelProps {
   data: DashboardCockpitData['sourceStatus'];
 }
 
-const SOURCE_STATUS_ITEMS = [
-  { key: 'normal', label: '正常水源', tone: 'normal' },
-  { key: 'warning', label: '预警水源', tone: 'warning' },
-  { key: 'risk', label: '风险水源', tone: 'risk' },
-] as const;
-
 export default function SourceStatusPanel({ data }: SourceStatusPanelProps) {
-  const hasData = SOURCE_STATUS_ITEMS.some((item) => data[item.key] > 0) || data.hasDryRisk;
-  const summary = `正常水源${data.normal}处，预警水源${data.warning}处，风险水源${data.risk}处；${data.notice}`;
+  const [drillDownOpen, setDrillDownOpen] = useState(false);
+  const [drillDownTitle, setDrillDownTitle] = useState('');
+  const [drillDownData, setDrillDownData] = useState<WaterPoint[]>([]);
 
-  return (
-    <DashboardPanel title="水源状况" className="dashboard-analysis-panel">
-      {hasData ? (
-        <>
-          <ul className="dashboard-source-status-list" aria-label={`供水点水源状况数量：${summary}`}>
-            {SOURCE_STATUS_ITEMS.map((item) => (
-              <li
-                key={item.key}
-                className={`dashboard-source-status-item dashboard-status--${item.tone}`}
-              >
-                <span className="dashboard-source-status-label">
-                  <span className="dashboard-status-dot" aria-hidden="true" />
-                  {item.label}
-                </span>
-                <strong>{data[item.key]}</strong>
-              </li>
-            ))}
-          </ul>
-          <p
-            className={`dashboard-source-notice ${
-              data.hasDryRisk ? 'dashboard-source-notice--warning' : ''
-            }`}
-          >
-            <span className="dashboard-source-notice-label">水源提示</span>
-            {data.notice}
-          </p>
-          <p className="dashboard-visually-hidden">水源状况摘要：{summary}</p>
-        </>
-      ) : (
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [detailPoint, setDetailPoint] = useState<WaterPoint | null>(null);
+
+  const hasData = data.breakdown && data.breakdown.length > 0;
+  const total = data.normal + data.warning + data.risk;
+
+  const handleTypeClick = (type: string) => {
+    const filtered = waterPoints.filter((wp) => wp.sourceType === type);
+    setDrillDownTitle(`${type}水源地列表`);
+    setDrillDownData(filtered);
+    setDrillDownOpen(true);
+  };
+
+  const handleStatusClick = (type: string, status: string) => {
+    const filtered = waterPoints.filter(
+      (wp) => wp.sourceType === type && wp.status === status,
+    );
+    const statusText = status === 'running' ? '正常' : status === 'warning' ? '预警' : '风险';
+    setDrillDownTitle(`${type} - ${statusText}水源地`);
+    setDrillDownData(filtered);
+    setDrillDownOpen(true);
+  };
+
+  const handleViewDetail = (point: WaterPoint) => {
+    setDetailPoint(point);
+    setDetailOpen(true);
+    setDrillDownOpen(false);
+  };
+
+  if (!hasData) {
+    return (
+      <DashboardPanel title="水源状况" className="dashboard-analysis-panel">
         <div className="dashboard-panel-empty" role="status">
           暂无数据
         </div>
-      )}
-    </DashboardPanel>
+      </DashboardPanel>
+    );
+  }
+
+  return (
+    <>
+      <DashboardPanel title="水源状况" className="dashboard-analysis-panel">
+        <div className="source-status-list">
+          {data.breakdown.map((item) => (
+            <div
+              key={item.type}
+              className="source-status-row"
+              onClick={() => handleTypeClick(item.type)}
+              style={{ cursor: 'pointer' }}
+            >
+              <span className="source-type-label">{item.type}</span>
+              <span className="source-total">{item.total}处</span>
+              <span className="source-status-badges">
+                {item.normal > 0 && (
+                  <span
+                    className="badge badge-normal"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStatusClick(item.type, 'running');
+                    }}
+                  >
+                    <span className="badge-dot dot-normal" />
+                    {item.normal}
+                  </span>
+                )}
+                {item.warning > 0 && (
+                  <span
+                    className="badge badge-warning"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStatusClick(item.type, 'warning');
+                    }}
+                  >
+                    <span className="badge-dot dot-warning" />
+                    {item.warning}
+                  </span>
+                )}
+                {item.risk > 0 && (
+                  <span
+                    className="badge badge-risk"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStatusClick(item.type, 'fault');
+                    }}
+                  >
+                    <span className="badge-dot dot-risk" />
+                    {item.risk}
+                  </span>
+                )}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="source-status-summary">
+          <span className="summary-total">合计 {total}处</span>
+          <span className="summary-item summary-normal">正常 {data.normal}</span>
+          <span className="summary-item summary-warning">预警 {data.warning}</span>
+          <span className="summary-item summary-risk">风险 {data.risk}</span>
+        </div>
+        {data.hasDryRisk && (
+          <p className="dashboard-source-notice dashboard-source-notice--warning">
+            <span className="dashboard-source-notice-label">水源提示</span>
+            {data.notice}
+          </p>
+        )}
+      </DashboardPanel>
+
+      <SourceDrillDownModal
+        open={drillDownOpen}
+        title={drillDownTitle}
+        data={drillDownData}
+        onClose={() => setDrillDownOpen(false)}
+        onViewDetail={handleViewDetail}
+      />
+
+      <SourceDetailModal
+        open={detailOpen}
+        point={detailPoint}
+        onClose={() => setDetailOpen(false)}
+      />
+    </>
   );
 }

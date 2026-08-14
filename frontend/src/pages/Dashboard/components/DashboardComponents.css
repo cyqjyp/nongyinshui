@@ -376,6 +376,102 @@
   border-left-color: var(--color-status-warning);
 }
 
+/* 水源状况列表式布局 */
+.source-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.source-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: rgba(26, 45, 74, 0.4);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.source-type-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-on-surface);
+  font-weight: 500;
+  min-width: 80px;
+}
+
+.source-type-icon {
+  font-size: 14px;
+}
+
+.source-total {
+  color: #00d4ff;
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 40px;
+  text-align: center;
+}
+
+.source-status-badges {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.dot-normal { background: #00c853; }
+.dot-warning { background: #ffc107; }
+.dot-risk { background: #f44336; }
+
+.badge-normal { color: #00c853; }
+.badge-warning { color: #ffc107; }
+.badge-risk { color: #f44336; }
+
+/* 汇总行 */
+.source-status-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px;
+  border-top: 1px solid rgba(0, 212, 255, 0.2);
+  font-size: 12px;
+}
+
+.summary-total {
+  color: #00d4ff;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.summary-normal { color: #00c853; }
+.summary-warning { color: #ffc107; }
+.summary-risk { color: #f44336; }
+
 .dashboard-source-notice-label {
   color: var(--color-on-surface);
   font-family: var(--font-mono);

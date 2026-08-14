@@ -433,6 +433,31 @@ export async function fetchDashboardCockpit(): Promise<DashboardCockpitData> {
     },
     { normal: 0, warning: 0, risk: 0 },
   );
+
+  // 按水源类型分组统计
+  const sourceTypeMap = new Map<string, { total: number; normal: number; warning: number; risk: number }>();
+  waterPoints.forEach((point) => {
+    const sourceType = point.sourceType;
+    if (!sourceTypeMap.has(sourceType)) {
+      sourceTypeMap.set(sourceType, { total: 0, normal: 0, warning: 0, risk: 0 });
+    }
+    const counts = sourceTypeMap.get(sourceType)!;
+    counts.total += 1;
+    if (
+      DRY_RISK_VILLAGE_IDS.has(point.villageId) ||
+      point.status === 'fault' ||
+      point.status === 'stopped'
+    ) {
+      counts.risk += 1;
+    } else if (point.status === 'warning') {
+      counts.warning += 1;
+    } else {
+      counts.normal += 1;
+    }
+  });
+  const sourceTypeBreakdown = Array.from(sourceTypeMap.entries())
+    .map(([type, counts]) => ({ type, ...counts }))
+    .sort((a, b) => b.total - a.total);
   const pressureDates = pressureMonitoringPoints.length > 0 ? [...sevenDayLabels] : [];
   const normalPressureSeries =
     pressureMonitoringPoints.length > 0 ? [...dashboardPressureSeries.normal] : [];
@@ -532,6 +557,7 @@ export async function fetchDashboardCockpit(): Promise<DashboardCockpitData> {
       notice: dryRiskVillages.length
         ? `${dryRiskVillages.map((village) => village.name).join('、')}水源存在季节性枯水风险，建议核查水源蓄水并完善应急供水预案`
         : '当前各供水点水源状况正常，无季节性枯水风险',
+      breakdown: sourceTypeBreakdown,
     },
     alertCategories: alertCategoryNames.map((name) => ({
       name,

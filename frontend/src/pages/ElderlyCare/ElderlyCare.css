@@ -1,0 +1,82 @@
+.elderly-care-page {
+  padding: 24px;
+}
+
+.elderly-care-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.elderly-care-header .page-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.elderly-care-header .title-bar {
+  width: 4px;
+  height: 22px;
+  background: #00d4ff;
+  border-radius: 2px;
+}
+
+.elderly-stats-row {
+  margin-bottom: 20px;
+}
+
+.elderly-stats-row .stat-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+.elderly-stats-row .stat-card .ant-statistic-title {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+}
+
+.elderly-stats-row .stat-card .ant-statistic-content {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.elderly-filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+
+.elderly-alert-banner {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  background: rgba(255, 77, 79, 0.1);
+  border: 1px solid rgba(255, 77, 79, 0.3);
+  border-radius: 6px;
+  color: #ff4d4f;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.elderly-alert-banner:hover {
+  background: rgba(255, 77, 79, 0.15);
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+}

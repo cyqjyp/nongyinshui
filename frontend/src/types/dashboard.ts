@@ -68,6 +68,13 @@ export interface DashboardCockpitData {
     risk: number;
     hasDryRisk: boolean;
     notice: string;
+    breakdown: Array<{
+      type: string;
+      total: number;
+      normal: number;
+      warning: number;
+      risk: number;
+    }>;
   };
   alertCategories: Array<{ name: string; value: number }>;
   alertDrillDown: Array<{

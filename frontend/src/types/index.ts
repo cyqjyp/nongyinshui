@@ -235,3 +235,58 @@ export interface VillageSummary {
   pendingAlerts: number;
   dryRisk: boolean;
 }
+
+// ============ 独居老人关怀 ============
+
+export type ElderlyHealthStatus = '自理' | '半自理' | '需照料';
+export type ElderlyCareStatus = '已关怀' | '待关怀' | '超期';
+export type ElderlyWaterStatus = '正常' | '异常';
+export type ElderlyCareMethod = '上门走访';
+export type ElderlyAlertType = '长期0用水' | '长期高用水';
+
+export interface ElderlyPerson {
+  id: string;
+  name: string;
+  age: number;
+  gender: '男' | '女';
+  villageId: string;
+  address: string;
+  contactName: string;
+  contactPhone: string;
+  supplyMode: SupplyMode;
+  healthStatus: ElderlyHealthStatus;
+  meterNumber?: string;
+  waterPointId?: string;
+  remark?: string;
+  createdAt: string;
+}
+
+export interface ElderlyCareRecord {
+  id: string;
+  elderlyId: string;
+  careDate: string;
+  careMethod: ElderlyCareMethod;
+  caregiver: string;
+  waterStatus: ElderlyWaterStatus;
+  healthStatus: '良好' | '需关注';
+  measures?: string;
+  remark?: string;
+}
+
+export interface ElderlyWaterAlert {
+  id: string;
+  elderlyId: string;
+  alertType: ElderlyAlertType;
+  triggeredAt: string;
+  description: string;
+  notifiedPersons: string[];
+  handled: boolean;
+}
+
+export interface ElderlyCareOverview {
+  totalElderly: number;
+  careCoverage: number;
+  weeklyCared: number;
+  pendingCare: number;
+  waterAbnormal: number;
+}

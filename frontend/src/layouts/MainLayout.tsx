@@ -10,6 +10,7 @@ import {
   BellOutlined,
   UserOutlined,
   HomeOutlined,
+  HeartOutlined,
 } from '@ant-design/icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './MainLayout.css';
@@ -23,6 +24,7 @@ const MENU_ITEMS = [
   { key: '/water-quality', icon: <ExperimentOutlined />, label: '水质安全管理' },
   { key: '/inspection', icon: <ScheduleOutlined />, label: '巡检与运行管理' },
   { key: '/repair', icon: <ToolOutlined />, label: '报修管理' },
+  { key: '/elderly-care', icon: <HeartOutlined />, label: '独居老人关怀' },
   { key: '/reports', icon: <FileTextOutlined />, label: '报表导出' },
 ];
 
@@ -33,6 +35,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/water-quality': '水质安全管理',
   '/inspection': '巡检与运行管理',
   '/repair': '报修管理',
+  '/elderly-care': '独居老人关怀',
   '/reports': '报表导出',
 };
 
